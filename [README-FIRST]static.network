@@ -1,0 +1,10 @@
+# Remove all the comments after the cleanup and reconfiguration!
+# Put this file inside the /etc/systemd/network and execute a
+# systemctl restart systemd.networkd
+[Match]
+Name=eno1
+
+[Network]
+Address=172.29.202.26/24
+Gateway=172.29.202.1
+DNS=172.29.202.10
