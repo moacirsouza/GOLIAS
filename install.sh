@@ -1,5 +1,5 @@
 #!/bin/bash
 
-kernel_version=$(uname -r)
+export HOST_KERNEL_VERSION="v$(uname -r)"
 
-echo $kernel_version
+docker build -t moka/cuda:latest .

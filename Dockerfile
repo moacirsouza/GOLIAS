@@ -4,23 +4,25 @@
 # NVIDIA suggests you to use ubuntu:14.04
 FROM ubuntu:14.04
 
+# Getting the kernel version of the host machine
+ARG HOST_KERNEL_VERSION
+
 # Installing Ubuntu dependencies
-RUN apt-get update && \
-apt-get install -y \
-gcc-4.7 \
-g++-4.7 \
-wget \
-git \
-make \
-dpkg-dev
+RUN apt-get update && apt-get install -y \
+    gcc-4.7 \
+    g++-4.7 \
+    wget \
+    git \
+    make \
+    dpkg-dev
 
 # Preparing the environment to use the correct GCC version
 RUN update-alternatives --remove gcc /usr/bin/gcc-4.8 && \
-update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.7 && \
-update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.7 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.7 && \
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40 --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
 
 # Getting the right kernel headers for the system
 RUN mkdir -p /usr/src/kernels && \
-cd /usr/src/kernels && \
-git init && \
-git remote add -f -t v4.19.43-coreos origin https://github.com/coreos/linux.git
+    cd /usr/src/kernels && \
+    git init && \
+    git remote add -f -t $HOST_KERNEL_VERSION origin https://github.com/coreos/linux.git
