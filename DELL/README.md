@@ -6,7 +6,7 @@
 
 The first time your system boots up you will have to create a static network configuration in order to access it from a proper terminal, instead of the emulated one available in the iDRAC dashboard:
 
-1. Static network configuration ([Reference](https://coreos.com/os/docs/latest/network-config-with-networkd.html){:target="_blank"}):
+1. Static network configuration ([Reference](https://coreos.com/os/docs/latest/network-config-with-networkd.html target="_blank")):
 
 Put the following content inside the `/etc/systemd/network` file, change the addresses where appropriate and execute a `systemctl restart systemd.networkd`:
 
