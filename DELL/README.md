@@ -1,4 +1,4 @@
-# ATTENTION: This repo is not up to date. After messing aroung with the DELL machine and CoreOS some changes had to be made, but I haven't had the time to implement them yet. I'll be back to them after my vacations. 
+# ATTENTION: This repo is not up to date. After messing aroung with the DELL machine some changes had to be made, but I haven't had the time to implement them yet. I'll be back to them after my vacations. 
 
 # DELL with CotainerLinux (CoreOS) 
 
