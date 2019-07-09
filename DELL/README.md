@@ -1,12 +1,12 @@
 # DELL with CotainerLinux (CoreOS)
 
-## Using CoreOS
+## Using ContainerLinux (CoreOS)
 
-The first time you boot your system you will have to create a static network configuration in order to access it from a proper terminal, instead of the emulated one available in the iDRAC dashboard:
+The first time your system boots up you will have to create a static network configuration in order to access it from a proper terminal, instead of the emulated one available in the iDRAC dashboard:
 
 1. Static network configuration ([Reference](https://coreos.com/os/docs/latest/network-config-with-networkd.html)):
 
-Put the following content inside the /etc/systemd/network file, change the addresses where appropriate and execute a `systemctl restart systemd.networkd`
+Put the following content inside the `/etc/systemd/network` file, change the addresses where appropriate and execute a `systemctl restart systemd.networkd`:
 
 ```
 [Match]
@@ -18,9 +18,9 @@ Gateway=xxx.xxx.xxx.xxx
 DNS=xxx.xxx.xxx.xxx
 ```
 
-After that, you can work to create a cloud-config in order to persist some basic informations that'll be useful to facilitate your work:
+After that you can create a cloud-config to persist some basic informations that'll be useful to facilitate your work:
 
-2. Creating a minimal cloud-config with user and password `core`:
+2. Creating a minimal `cloud-config` with user and password `core`:
 
 ```
 #cloud-config
