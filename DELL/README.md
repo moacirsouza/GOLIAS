@@ -20,9 +20,9 @@ Gateway=xxx.xxx.xxx.xxx
 DNS=xxx.xxx.xxx.xxx
 ```
 
-After that you can create a cloud-config to persist some basic informations that'll be useful to facilitate your work:
+After that you can create a cloud-config in order to persist some basic informations. Put the following content inside the `/var/lib/coreos-install/user_data` file and it will configure the system with a user `core` (Password: `core`), give it `root` access through `sudo` command and finally persist the previous network configuration. 
 
-2. Creating a minimal `cloud-config` with user and password `core`:
+2. Creating a minimal `user-data` with user and password `core`:
 
 ```
 #cloud-config
