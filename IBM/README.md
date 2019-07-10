@@ -1,4 +1,4 @@
-# IBM with Fedora Atomic Host
+# [IBM Power System AC922](https://www.ibm.com/us-en/marketplace/power-systems-ac922) with [Fedora Atomic Host 29](https://www.projectatomic.io/blog/2018/10/fedora-atomic-28-to-29-upgrade/)
 
 ## Using Fedora Atomic Host
 
