@@ -4,7 +4,7 @@
 host_arch=$(uname -i)
 host_kernel_version=$(uname -r)
 
-podman build \
+docker build \
     --build-arg HOST_ARCH=${host_arch} \
     --build-arg HOST_KERNEL_VERSION=${host_kernel_version} \
     -t moka/cuda:0.1 .

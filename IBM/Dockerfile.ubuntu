@@ -29,8 +29,7 @@ RUN apt-get update && apt-get install -y \
 RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 0 \
     --slave /usr/bin/g++ g++ /usr/bin/g++-4.8
 
-COPY cuda_10.1.168_418.67_linux_ppc64le.run \
-     /opt/cuda_10.1.168_418.67_linux_ppc64le.run
+# COPY cuda_10.1.168_418.67_linux_ppc64le.run /opt/cuda_10.1.168_418.67_linux_ppc64le.run
 
 # RUN dpkg -i /opt/cuda-repo-ubuntu1804-10-1-local-10.1.168-418.67_1.0-1_ppc64el.deb
 

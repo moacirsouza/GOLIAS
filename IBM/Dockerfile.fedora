@@ -37,28 +37,28 @@ RUN dnf clean all
 #        curl -LS https://git.zx2c4.com/WireGuard/snapshot/WireGuard-${WIREGUARD_VERSION}.tar.xz | \
 #        { t="$(mktemp)"; trap "rm -f '$t'" INT TERM EXIT; cat >| "$t"; sha256sum --quiet -c <<<"${WIREGUARD_SHA256} $t" \
 #        || exit 1; cat "$t"; } | tar xJf -
-
-RUN cd /tmp/WireGuard-${WIREGUARD_VERSION}/src; \
-    KERNELDIR=/usr/lib/modules/${HOST_KERNEL_VERSION}/build make -j$(nproc) && make install
-
-FROM fedora:29
-MAINTAINER "Joe Doss" <joe@solidadmin.com>
-
-ARG HOST_KERNEL_VERSION
-
-WORKDIR /tmp
-
-RUN dnf update -y && dnf install kmod koji -y && \
-        koji download-build --rpm --arch=ppc64le kernel-core-${HOST_KERNEL_VERSION} && \
-        koji download-build --rpm --arch=ppc64le kernel-modules-${HOST_KERNEL_VERSION} && \
-        dnf install /tmp/kernel-core-${HOST_KERNEL_VERSION}.rpm \
-        kernel-modules-${HOST_KERNEL_VERSION}.rpm -y && \
-        dnf clean all && rm -f /tmp/*.rpm
-
-COPY --from=builder /usr/lib/modules/${HOST_KERNEL_VERSION}/extra/wireguard.ko \
-                    /usr/lib/modules/${HOST_KERNEL_VERSION}/extra/wireguard.ko
-
-COPY --from=builder /usr/bin/wg /usr/bin/wg
-COPY --from=builder /usr/bin/wg-quick /usr/bin/wg-quick
-
-CMD /usr/bin/wg
+#
+#RUN cd /tmp/WireGuard-${WIREGUARD_VERSION}/src; \
+#    KERNELDIR=/usr/lib/modules/${HOST_KERNEL_VERSION}/build make -j$(nproc) && make install
+#
+#FROM fedora:29
+#MAINTAINER "Joe Doss" <joe@solidadmin.com>
+#
+#ARG HOST_KERNEL_VERSION
+#
+#WORKDIR /tmp
+#
+#RUN dnf update -y && dnf install kmod koji -y && \
+#        koji download-build --rpm --arch=ppc64le kernel-core-${HOST_KERNEL_VERSION} && \
+#        koji download-build --rpm --arch=ppc64le kernel-modules-${HOST_KERNEL_VERSION} && \
+#        dnf install /tmp/kernel-core-${HOST_KERNEL_VERSION}.rpm \
+#        kernel-modules-${HOST_KERNEL_VERSION}.rpm -y && \
+#        dnf clean all && rm -f /tmp/*.rpm
+#
+#COPY --from=builder /usr/lib/modules/${HOST_KERNEL_VERSION}/extra/wireguard.ko \
+#                    /usr/lib/modules/${HOST_KERNEL_VERSION}/extra/wireguard.ko
+#
+#COPY --from=builder /usr/bin/wg /usr/bin/wg
+#COPY --from=builder /usr/bin/wg-quick /usr/bin/wg-quick
+#
+#CMD /usr/bin/wg
