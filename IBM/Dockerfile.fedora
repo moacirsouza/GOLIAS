@@ -1,5 +1,8 @@
-# This Dockerfile was created based on this article: https://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/
-FROM fedora:29 as builder
+# This Dockerfile was created based on this article:
+# https://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/
+
+# Using 
+FROM fedora:29 AS builder
 MAINTAINER "Moacir Filho a.k.a. Moka" <moacir.souza-filho@serpro.gov.br>
 
 ARG HOST_KERNEL_VERSION
@@ -7,23 +10,33 @@ ARG HOST_ARCH
 
 WORKDIR /tmp
 
-RUN dnf update -y && dnf install \
+# Updating the packages of the system and installing dependencies
+RUN dnf upgrade -y && dnf install -y \
         libmnl-devel elfutils-libelf-devel findutils binutils boost-atomic boost-chrono \
-        boost-date-time boost-system boost-thread cpp dyninst efivar-libs gc \
-        gcc glibc-devel glibc-headers guile koji isl libatomic_ops libdwarf libmpc \
-        libpkgconf libtool-ltdl libxcrypt-devel make mokutil pkgconf pkgconf-m4 \
-        pkgconf-pkg-config unzip zip /usr/bin/pkg-config xz -y && \
-        koji download-build --rpm --arch=${HOST_ARCH} kernel-core-${HOST_KERNEL_VERSION} && \
-        koji download-build --rpm --arch=${HOST_ARCH} kernel-devel-${HOST_KERNEL_VERSION} && \
-        koji download-build --rpm --arch=${HOST_ARCH} kernel-modules-${HOST_KERNEL_VERSION} && \
-        dnf install kernel-core-${HOST_KERNEL_VERSION}.rpm \
+        boost-date-time boost-system boost-thread cpp gc gcc glibc-devel glibc-headers \ 
+        guile koji isl libatomic_ops libdwarf libmpc libpkgconf libtool-ltdl \
+        libxcrypt-devel make pkgconf pkgconf-m4 pkgconf-pkg-config unzip zip \
+        /usr/bin/pkg-config xz
+
+# Packages I couldn't find in the official Fedora packages repository
+# dyninst efivar-libs mokutil
+
+RUN koji download-build --rpm --arch=ppc64le kernel-core-${HOST_KERNEL_VERSION}
+
+RUN koji download-build --rpm --arch=ppc64le kernel-devel-${HOST_KERNEL_VERSION}
+
+RUN koji download-build --rpm --arch=ppc64le kernel-modules-${HOST_KERNEL_VERSION}
+
+RUN dnf install -y kernel-core-${HOST_KERNEL_VERSION}.rpm \
         kernel-devel-${HOST_KERNEL_VERSION}.rpm \
-        kernel-modules-${HOST_KERNEL_VERSION}.rpm -y && \
-        dnf clean all && \
+        kernel-modules-${HOST_KERNEL_VERSION}.rpm
+
+RUN dnf clean all
+
 # TODO: Edit from here on!
-        curl -LS https://git.zx2c4.com/WireGuard/snapshot/WireGuard-${WIREGUARD_VERSION}.tar.xz | \
-        { t="$(mktemp)"; trap "rm -f '$t'" INT TERM EXIT; cat >| "$t"; sha256sum --quiet -c <<<"${WIREGUARD_SHA256} $t" \
-        || exit 1; cat "$t"; } | tar xJf -
+#        curl -LS https://git.zx2c4.com/WireGuard/snapshot/WireGuard-${WIREGUARD_VERSION}.tar.xz | \
+#        { t="$(mktemp)"; trap "rm -f '$t'" INT TERM EXIT; cat >| "$t"; sha256sum --quiet -c <<<"${WIREGUARD_SHA256} $t" \
+#        || exit 1; cat "$t"; } | tar xJf -
 
 RUN cd /tmp/WireGuard-${WIREGUARD_VERSION}/src; \
     KERNELDIR=/usr/lib/modules/${HOST_KERNEL_VERSION}/build make -j$(nproc) && make install
@@ -36,8 +49,8 @@ ARG HOST_KERNEL_VERSION
 WORKDIR /tmp
 
 RUN dnf update -y && dnf install kmod koji -y && \
-        koji download-build --rpm --arch=${HOST_ARCH} kernel-core-${HOST_KERNEL_VERSION} && \
-        koji download-build --rpm --arch=${HOST_ARCH} kernel-modules-${HOST_KERNEL_VERSION} && \
+        koji download-build --rpm --arch=ppc64le kernel-core-${HOST_KERNEL_VERSION} && \
+        koji download-build --rpm --arch=ppc64le kernel-modules-${HOST_KERNEL_VERSION} && \
         dnf install /tmp/kernel-core-${HOST_KERNEL_VERSION}.rpm \
         kernel-modules-${HOST_KERNEL_VERSION}.rpm -y && \
         dnf clean all && rm -f /tmp/*.rpm
