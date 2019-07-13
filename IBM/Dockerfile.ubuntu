@@ -1,16 +1,20 @@
 # This image was created using the following tutorial:
 # http://tleyden.github.io/blog/2014/11/04/coreos-with-nvidia-cuda-gpu-drivers/
 
-# NVIDIA suggests you to use ubuntu:14.04
-FROM ubuntu:14.04
+### NOTE: There's not CUDA toolkit (https://developer.nvidia.com/cuda-toolkit)
+### available for Ubuntu 14.04, therefore, I'll be using version 18.04 here
+
+# NVIDIA suggests you to use ubuntu:14.04 (See the NOTE above)
+FROM ubuntu:18.04
 
 # Getting the kernel version of the host machine
 ARG HOST_KERNEL_VERSION
 
-### NOTE: In the tleyden article he used the 4.7 version for GCC and GCP, but
-### there are no candidate ppc packages for this version in the repositories,
+### NOTE: In the tleyden article he used the 4.7 version for gcc and g++, but
+### there are no ppc packages candidates for this version in the repositories,
 ### so I changed it to 4.8
-# Installing Ubuntu dependencies
+
+# Installing Ubuntu dependencies (See the NOTE above)
 RUN apt-get update && apt-get install -y \
     gcc-4.8 \
     g++-4.8 \
@@ -24,6 +28,7 @@ RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 40 --slave /
 
 ### TODO: This code was used to build the CoreOS kernel in the DELL version,
 ### I still have to check and see if it works for the IBM machine 
+
 # Getting the right kernel headers for the system
 #RUN mkdir -p /usr/src/kernels && \
 #    cd /usr/src/kernels && \
