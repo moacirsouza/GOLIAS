@@ -1,25 +1,59 @@
 # This Dockerfile was created based on this article:
 # https://www.projectatomic.io/blog/2018/06/building-kernel-modules-with-podman/
+#
+# Some tips were also used from this page as well:
+# http://tleyden.github.io/blog/2014/11/04/coreos-with-nvidia-cuda-gpu-drivers/
 
-# Using 
+# ATTENTION: This is a multi-stage Dockerfile, it's only supported by docker
+# version 17.05 or higher or podman version 1.4.2 or higher
+
 FROM fedora:29 AS builder
 MAINTAINER "Moacir Filho a.k.a. Moka" <moacir.souza-filho@serpro.gov.br>
 
+# Gathering information about the host's kernel version and architecture
 ARG HOST_KERNEL_VERSION
 ARG HOST_ARCH
 
 WORKDIR /tmp
 
+### Packages I couldn't find in the official Fedora repository: 
+### dyninst efivar-libs mokutil
+
 # Updating the packages of the system and installing dependencies
 RUN dnf upgrade -y && dnf install -y \
-        libmnl-devel elfutils-libelf-devel findutils binutils boost-atomic boost-chrono \
-        boost-date-time boost-system boost-thread cpp gc gcc glibc-devel glibc-headers \ 
-        guile koji isl libatomic_ops libdwarf libmpc libpkgconf libtool-ltdl \
-        libxcrypt-devel make pkgconf pkgconf-m4 pkgconf-pkg-config unzip zip \
-        /usr/bin/pkg-config xz
+	gcc \
+        gcc-g++ \
+	make \
+	koji \
+	pkgconf
+#       libmnl-devel \
+#       elfutils-libelf-devel \
+#       findutils \
+#	binutils \
+#	boost-atomic \
+#	boost-chrono \
+#       boost-date-time \
+#	boost-system \
+#	boost-thread \
+#	cpp \
+#	gc \
+#	glibc-devel \
+#	glibc-headers \
+#       guile \
+#	isl \
+#	libatomic_ops \
+#	libdwarf \
+#	libmpc \
+#	libpkgconf \
+#	libtool-ltdl \
+#       libxcrypt-devel \
+#	pkgconf-m4 \
+#	pkgconf-pkg-config \
+#	unzip \
+#	zip \
+#       /usr/bin/pkg-config \
+#	xz
 
-# Packages I couldn't find in the official Fedora packages repository
-# dyninst efivar-libs mokutil
 
 RUN koji download-build --rpm --arch=ppc64le kernel-core-${HOST_KERNEL_VERSION}
 
@@ -33,7 +67,9 @@ RUN dnf install -y kernel-core-${HOST_KERNEL_VERSION}.rpm \
 
 RUN dnf clean all
 
-# TODO: Edit from here on!
+COPY cuda_10.1.168_418.67_linux_ppc64le.run /opt/cuda_10.1.168_418.67_linux_ppc64le.run
+### TODO: Edit from here on!
+
 #        curl -LS https://git.zx2c4.com/WireGuard/snapshot/WireGuard-${WIREGUARD_VERSION}.tar.xz | \
 #        { t="$(mktemp)"; trap "rm -f '$t'" INT TERM EXIT; cat >| "$t"; sha256sum --quiet -c <<<"${WIREGUARD_SHA256} $t" \
 #        || exit 1; cat "$t"; } | tar xJf -
