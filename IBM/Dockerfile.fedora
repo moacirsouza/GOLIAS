@@ -22,7 +22,7 @@ WORKDIR /tmp
 # Updating the packages of the system and installing dependencies
 RUN dnf upgrade -y && dnf install -y \
 	gcc \
-        gcc-g++ \
+        gcc-c++ \
 	make \
 	koji \
 	pkgconf
