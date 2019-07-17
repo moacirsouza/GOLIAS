@@ -10,4 +10,10 @@ Once you're done with this part, you should update your System using the followi
 rpm-ostree update && systemctl reboot
 ```
 
+## Making it work
 
+Just run the `install.sh` passing the wanted Dockerfile as a parameter.
+
+```
+$ ./install.sh Dockerfile.fedora
+```
